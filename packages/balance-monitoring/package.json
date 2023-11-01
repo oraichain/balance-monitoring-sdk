@@ -1,0 +1,16 @@
+{
+  "name": "@oraichain/balancing-monitoring",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "files": [
+    "src/"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "cosmjs-types": "^0.8.0",
+    "ts-results": "^3.3.0",
+    "@oraichain/balancing-monitoring-contracts-build": "^1.0.0",
+    "@oraichain/balancing-monitoring-contracts-sdk": "^1.0.0",
+    "@oraichain/cw-simulate": "^2.8.71"
+  }
+}

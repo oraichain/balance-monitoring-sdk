@@ -1,0 +1,33 @@
+{
+  "name": "root",
+  "private": "true",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "patch-package",
+    "build": "tsc -p",
+    "deploy": "yarn publish --access public --patch",
+    "docs": "typedoc --entryPointStrategy expand --name 'Balance Monitoring SDK' --readme none --tsconfig packages/contracts-sdk/tsconfig.json packages/contracts-sdk/src"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "@cosmjs/amino": "^0.31.0",
+    "@cosmjs/cosmwasm-stargate": "^0.31.0",
+    "@cosmjs/crypto": "^0.31.0",
+    "@cosmjs/proto-signing": "^0.31.0",
+    "@cosmjs/stargate": "^0.31.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.8",
+    "lerna": "^5.6.1",
+    "patch-package": "^7.0.0",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.24.7",
+    "typescript": "5.0"
+  },
+  "version": "1.0.1"
+}
