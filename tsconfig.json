@@ -5,7 +5,7 @@
             "ES2020",
             "dom"
         ],
-        "module": "ESNext",
+        "module": "CommonJS",
         "moduleResolution": "node",
         "skipLibCheck": true,
         "sourceMap": true,

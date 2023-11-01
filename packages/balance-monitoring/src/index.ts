@@ -1,8 +1,7 @@
-import { CosmWasmClient } from '@cosmjs/cosmwasm-stargate';
-import { OraiBalanceProcessorQueryClient } from '@oraichain/balancing-monitoring-contracts-sdk';
+// @ts-nocheck
+import { BigDecimal } from '@oraichain/oraidex-common';
 
-const client = await CosmWasmClient.connect('https://rpc.orai.io');
+const a = new BigDecimal(13);
+const b = new BigDecimal(14);
 
-const oraiBalanceProcessorContract = new OraiBalanceProcessorQueryClient(client, 'orai1m8dzwnxyrkvqpdkk35z8xq4rqcdf75g7fkf5y0gf63yqyrjeqk6s2fwj2f');
-
-console.dir(await oraiBalanceProcessorContract.queryBalancesMapping(), { depth: null });
+console.log(a + (b + 12) / 5);
