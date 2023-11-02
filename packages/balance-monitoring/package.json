@@ -17,13 +17,14 @@
     "ethers": "^5.0.15"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.18.6",
     "@babel/cli": "^7.18.6",
     "@babel/core": "^7.18.6",
+    "@babel/preset-env": "^7.18.6",
+    "@babel/preset-typescript": "^7.23.2",
     "@babel/runtime": "^7.18.6",
-    "cosmjs-types": "^0.8.0",
-    "ts-results": "^3.3.0",
     "@oraichain/balancing-monitoring-contracts-build": "^1.0.0",
-    "@oraichain/cw-simulate": "^2.8.71"
+    "@oraichain/cw-simulate": "^2.8.71",
+    "cosmjs-types": "^0.8.0",
+    "ts-results": "^3.3.0"
   }
 }
