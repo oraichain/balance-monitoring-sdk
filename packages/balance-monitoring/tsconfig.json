@@ -3,11 +3,13 @@
     "compilerOptions": {
         "baseUrl": ".",
         "outDir": "build",
+        "isolatedModules": true,
         "declaration": true,
-        "rootDir": "src"
+        "rootDir": "."
     },
     "include": [
-        "src/**/*.ts"
+        "src/**/*.ts",
+        "scripts/**/*.ts"
     ],
     "exclude": [
         "node_modules/"

@@ -27,3 +27,6 @@ typings/
 
 .npmrc
 build
+data.*
+.DS_Store
+config.json
