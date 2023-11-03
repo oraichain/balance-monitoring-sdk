@@ -55,13 +55,13 @@ const createTable = (data: object[]) => {
   const headers = Object.keys(data[0]);
   const mapHeader = {};
   headers.forEach((header) => {
-    mapHeader[header] = data.map((d) => d[header]);
+    mapHeader[`${header}`] = data.map((d) => d[`${header}`]);
   });
 
   const table = headers.map((header) => {
     return {
       name: header.toUpperCase(),
-      value: mapHeader[header].join("\n"),
+      value: mapHeader[`${header}`].join("\n"),
       inline: true,
     };
   });

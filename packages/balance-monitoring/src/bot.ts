@@ -1,10 +1,9 @@
-import { Client, Events, Partials } from "discord.js";
+import { Client, Events, Partials, WebhookClient } from "discord.js";
 import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
 import { OraiBalanceProcessorQueryClient } from "@oraichain/balancing-monitoring-contracts-sdk";
 import { subCommands as monitorSubcommand } from "./command/monitor";
 import { createEmbedBalanceResponse } from "./discordUtils";
 import config from "../config.json";
-import { WebhookClient } from "discord.js";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -26,6 +25,7 @@ export async function connect() {
 
 connect().then(() => {
   (async () => {
+    // eslint-disable-next-line
     while (true) {
       console.log("Start checking low balance");
       const low_balances =
