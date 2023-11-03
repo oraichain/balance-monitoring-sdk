@@ -6,10 +6,7 @@ import {
   DirectSecp256k1HdWallet,
   makeCosmoshubPath,
 } from "@cosmjs/proto-signing";
-import {
-  AssetInfo,
-  Uint128,
-} from "@oraichain/balancing-monitoring-contracts-sdk/build/OraiBalanceProcessor.types";
+import { AssetInfo } from "@oraichain/balancing-monitoring-contracts-sdk/build/OraiBalanceProcessor.types";
 
 import config from "../config.json";
 import fs from "fs";
@@ -112,6 +109,12 @@ async function addBalance() {
       gasPrice: GasPrice.fromString("0.025orai"),
     },
   );
+  // console.log(
+  //   await signClient.getBalance(
+  //     "orai195269awwnt5m6c843q6w7hp8rt0k7syfu9de4h0wz384slshuzps8y7ccm",
+  //     "",
+  //   ),
+  // );
   const tx = await signClient.executeMultiple(
     signer.address,
     instructions,

@@ -6,7 +6,6 @@ import { createEmbedBalanceResponse } from "./discordUtils";
 import config from "../config.json";
 import { WebhookClient } from "discord.js";
 import * as dotenv from "dotenv";
-import { QueryLowBalancesResponse } from "@oraichain/balancing-monitoring-contracts-sdk/build/OraiBalanceProcessor.types";
 dotenv.config();
 
 let cosmwasmClient: CosmWasmClient;
@@ -146,73 +145,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
           break;
         }
         case monitorSubcommand.QUERY_LOW_BALANCES: {
-          // const response =
-          //   await oraiBalanceProcessorContract.queryLowBalances();
-          const response: QueryLowBalancesResponse = {
-            low_balance_assets: [
-              {
-                addr: "test1",
-                assets: [
-                  {
-                    info: {
-                      native_token: {
-                        denom: "orai",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                  {
-                    info: {
-                      token: {
-                        contract_addr: "orai112312ir-120391-2",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                  {
-                    info: {
-                      token: {
-                        contract_addr:
-                          "orai1xv4z9w0q2z4q0z2q0z2q0z2q0z2q0z2q0z2q0z",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                ],
-                label: "test",
-              },
-              {
-                addr: "test2",
-                assets: [
-                  {
-                    info: {
-                      native_token: {
-                        denom: "orai",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                  {
-                    info: {
-                      token: {
-                        contract_addr: "token1",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                  {
-                    info: {
-                      token: {
-                        contract_addr: "token2",
-                      },
-                    },
-                    amount: "1000000",
-                  },
-                ],
-                label: "test",
-              },
-            ],
-          };
+          const response =
+            await oraiBalanceProcessorContract.queryLowBalances();
           await interaction.reply({
             embeds: [
               createEmbedBalanceResponse(

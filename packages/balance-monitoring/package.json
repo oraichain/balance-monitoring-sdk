@@ -6,7 +6,9 @@
     "src/"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json"
+    "build": "yarn build:types && yarn build:js",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "babel src --out-dir build --extensions \".ts\""
   },
   "license": "MIT",
   "dependencies": {

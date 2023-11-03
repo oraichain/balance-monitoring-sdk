@@ -88,6 +88,7 @@ const createFieldByLabel = (
 
   return table;
 };
+
 type EmbedBase = {
   title: string;
   color?: ColorResolvable;
