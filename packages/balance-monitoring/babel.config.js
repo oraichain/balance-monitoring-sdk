@@ -1,26 +1,25 @@
 module.exports = function (api) {
-  api.cache(process.env.NODE_ENV === "production");
+  api.cache(true);
   return {
     presets: [
+      '@babel/preset-typescript',
       [
-        "@babel/preset-env",
+        '@babel/preset-env',
         {
           targets: {
-            node: "current",
-          },
-        },
-      ],
-      "@babel/preset-typescript",
+            node: 'current'
+          }
+        }
+      ]
     ],
     plugins: [
       [
-        "./plugins/operator-overloading",
+        './plugins/operator-overloading',
         {
-          enabled: true,
-          classNames: ["BigDecimal"],
-        },
-      ],
+          classNames: ['BigDecimal']
+        }
+      ]
     ],
-    ignore: [/node_modules/],
+    ignore: [/node_modules/]
   };
 };

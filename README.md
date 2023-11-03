@@ -26,4 +26,9 @@ git apply patches/contracts-sdk.patch
 git diff packages/contracts-sdk > patches/contracts-sdk.patch
 # rollback
 git checkout packages/contracts-sdk
+
+
+# run code
+cd packages/balance-monitoring
+babel-node -x .ts src/index.ts
 ```

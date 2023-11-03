@@ -5,13 +5,18 @@
   "files": [
     "src/"
   ],
+  "license": "MIT",
   "scripts": {
     "build": "yarn build:types && yarn build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir build --extensions \".ts\""
   },
-  "license": "MIT",
   "dependencies": {
+    "@oraichain/balancing-monitoring-contracts-sdk": "^1.0.0",
+    "@oraichain/oraidex-common": "1.0.25",
+    "ethers": "^5.0.15"
+  },
+  "devDependencies": {
     "@babel/cli": "^7.18.6",
     "@babel/core": "^7.18.6",
     "@babel/preset-env": "^7.18.6",
@@ -23,10 +28,7 @@
     "discord.js": "^14.13.0",
     "dotenv": "^16.3.1",
     "lodash": "^4.17.21",
-    "ts-results": "^3.3.0"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.200",
+    "ts-results": "^3.3.0",
     "csv-parser": "^3.0.0"
   }
 }
