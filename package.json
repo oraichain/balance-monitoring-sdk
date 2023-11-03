@@ -33,7 +33,7 @@
     "patch-package": "^7.0.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.7",
-    "typescript": "*"
+    "typescript": "^5.2.2"
   },
   "version": "1.0.1"
 }
