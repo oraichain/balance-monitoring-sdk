@@ -7,19 +7,19 @@ module.exports = function (api) {
         "@babel/preset-env",
         {
           targets: {
-            node: "current"
-          }
-        }
-      ]
+            node: "current",
+          },
+        },
+      ],
     ],
     plugins: [
       [
         "./plugins/operator-overloading",
         {
-          classNames: ["BigDecimal"]
-        }
-      ]
+          classNames: ["BigDecimal"],
+        },
+      ],
     ],
-    ignore: [/node_modules/]
+    ignore: [/node_modules/, /scripts/, /plugins/],
   };
 };
