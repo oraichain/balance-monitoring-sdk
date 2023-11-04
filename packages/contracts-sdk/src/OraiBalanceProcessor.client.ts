@@ -6,7 +6,7 @@
 
 import { CosmWasmClient, SigningCosmWasmClient, ExecuteResult } from "@cosmjs/cosmwasm-stargate";
 import { Coin, StdFee } from "@cosmjs/amino";
-import {InstantiateMsg, ExecuteMsg, AssetInfo, Addr, Uint128, AddNewBalanceMappingMsg, UpdateBalanceMappingMsg, DeleteBalanceMappingMsg, QueryMsg, AdminResponse, QueryBalanceMappingResponse, AssetData, QueryBalancesMappingResponse, BalancesMappingQuery, QueryLowBalancesResponse, BalancesQuery, Asset} from "./OraiBalanceProcessor.types";
+import {InstantiateMsg, ExecuteMsg, AssetInfo, Addr, Uint128, AddNewBalanceMappingMsg, UpdateBalanceMappingMsg, DeleteBalanceMappingMsg, QueryMsg, AdminResponse, AllCurrentBalancesQueryResponse, BalancesQuery, Asset, QueryBalanceMappingResponse, AssetData, QueryBalancesMappingResponse, BalancesMappingQuery, QueryLowBalancesResponse} from "./OraiBalanceProcessor.types";
 export interface OraiBalanceProcessorReadOnlyInterface {
   contractAddress: string;
   queryLowBalances: () => Promise<QueryLowBalancesResponse>;
@@ -17,6 +17,13 @@ export interface OraiBalanceProcessorReadOnlyInterface {
     addr: string;
   }) => Promise<QueryBalanceMappingResponse>;
   queryAdmin: () => Promise<AdminResponse>;
+  queryAllCurrentBalances: ({
+    limit,
+    next
+  }: {
+    limit?: number;
+    next?: string;
+  }) => Promise<AllCurrentBalancesQueryResponse>;
 }
 export class OraiBalanceProcessorQueryClient implements OraiBalanceProcessorReadOnlyInterface {
   client: CosmWasmClient;
@@ -29,6 +36,7 @@ export class OraiBalanceProcessorQueryClient implements OraiBalanceProcessorRead
     this.queryBalancesMapping = this.queryBalancesMapping.bind(this);
     this.queryBalanceMapping = this.queryBalanceMapping.bind(this);
     this.queryAdmin = this.queryAdmin.bind(this);
+    this.queryAllCurrentBalances = this.queryAllCurrentBalances.bind(this);
   }
 
   queryLowBalances = async (): Promise<QueryLowBalancesResponse> => {
@@ -55,6 +63,20 @@ export class OraiBalanceProcessorQueryClient implements OraiBalanceProcessorRead
   queryAdmin = async (): Promise<AdminResponse> => {
     return this.client.queryContractSmart(this.contractAddress, {
       query_admin: {}
+    });
+  };
+  queryAllCurrentBalances = async ({
+    limit,
+    next
+  }: {
+    limit?: number;
+    next?: string;
+  }): Promise<AllCurrentBalancesQueryResponse> => {
+    return this.client.queryContractSmart(this.contractAddress, {
+      query_all_current_balances: {
+        limit,
+        next
+      }
     });
   };
 }

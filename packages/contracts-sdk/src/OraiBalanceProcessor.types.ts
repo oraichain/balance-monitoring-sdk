@@ -47,9 +47,26 @@ export type QueryMsg = {
   };
 } | {
   query_admin: {};
+} | {
+  query_all_current_balances: {
+    limit?: number | null;
+    next?: string | null;
+  };
 };
 export interface AdminResponse {
   admin?: string | null;
+}
+export interface AllCurrentBalancesQueryResponse {
+  balance_assets: BalancesQuery[];
+}
+export interface BalancesQuery {
+  addr: Addr;
+  assets: Asset[];
+  label: string;
+}
+export interface Asset {
+  amount: Uint128;
+  info: AssetInfo;
 }
 export interface QueryBalanceMappingResponse {
   assets: AssetData[];
@@ -70,13 +87,4 @@ export interface BalancesMappingQuery {
 }
 export interface QueryLowBalancesResponse {
   low_balance_assets: BalancesQuery[];
-}
-export interface BalancesQuery {
-  addr: Addr;
-  assets: Asset[];
-  label: string;
-}
-export interface Asset {
-  amount: Uint128;
-  info: AssetInfo;
 }
