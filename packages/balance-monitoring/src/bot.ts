@@ -1,25 +1,44 @@
 import { Client, Events, Partials, WebhookClient } from "discord.js";
-import { CosmWasmClient } from "@cosmjs/cosmwasm-stargate";
-import { OraiBalanceProcessorQueryClient } from "@oraichain/balancing-monitoring-contracts-sdk";
+import { SigningCosmWasmClient } from "@cosmjs/cosmwasm-stargate";
+import { OraiBalanceProcessorClient } from "@oraichain/balancing-monitoring-contracts-sdk";
 import { subCommands as monitorSubcommand } from "./command/monitor";
 import { createEmbedBalanceResponse } from "./discordUtils";
-import config from "../config.json";
 import * as dotenv from "dotenv";
+import {
+  DirectSecp256k1HdWallet,
+  makeCosmoshubPath,
+} from "@cosmjs/proto-signing";
+import { GasPrice } from "@cosmjs/stargate";
 dotenv.config();
 
-let cosmwasmClient: CosmWasmClient;
-let oraiBalanceProcessorContract: OraiBalanceProcessorQueryClient;
+let signingCosmwasmClient: SigningCosmWasmClient;
+let oraiBalanceProcessorContract: OraiBalanceProcessorClient;
 const webhook = new WebhookClient({
-  url: config.webhookUrl,
+  url: process.env.WEBHOOK_URL,
 });
 const maxConstainst = 10;
 
 export async function connect() {
-  cosmwasmClient = await CosmWasmClient.connect(config.rpc);
+  const wallet = await DirectSecp256k1HdWallet.fromMnemonic(
+    process.env.MNEMONIC,
+    {
+      prefix: "orai",
+      hdPaths: [makeCosmoshubPath(0)],
+    },
+  );
+  const [sender] = await wallet.getAccounts();
+  signingCosmwasmClient = await SigningCosmWasmClient.connectWithSigner(
+    process.env.RPC,
+    wallet,
+    {
+      gasPrice: GasPrice.fromString("0.003orai"),
+    },
+  );
 
-  oraiBalanceProcessorContract = new OraiBalanceProcessorQueryClient(
-    cosmwasmClient,
-    config.contract_address,
+  oraiBalanceProcessorContract = new OraiBalanceProcessorClient(
+    signingCosmwasmClient,
+    sender.address,
+    process.env.CONTRACT_ADDRESS,
   );
 }
 
@@ -32,13 +51,14 @@ connect().then(() => {
         await oraiBalanceProcessorContract.queryLowBalances();
       if (low_balances.low_balance_assets.length > 0) {
         await webhook.send({
-          content: `<@&${config.role_defi}> Please topup wallet above`,
+          content: `<@&${process.env.ROLE_DEFI}> Please topup wallets below`,
           embeds: [
             createEmbedBalanceResponse(
               {
                 title: "Low balance",
                 description:
                   "Alert about the low balance asset in tracking list wallet",
+                color: "Red",
               },
               low_balances.low_balance_assets,
             ),
@@ -50,7 +70,7 @@ connect().then(() => {
         console.log("Sent alert about low balance");
       }
       console.log("End checking low balance");
-      await new Promise((r) => setTimeout(r, 15000));
+      await new Promise((r) => setTimeout(r, 30000));
     }
   })();
 });
@@ -160,6 +180,122 @@ client.on(Events.InteractionCreate, async (interaction) => {
               ),
             ],
           });
+          break;
+        }
+        case monitorSubcommand.QUERY_ALL_CURRENT_BALANCES: {
+          const response =
+            await oraiBalanceProcessorContract.queryAllCurrentBalances({});
+          const sortLabel = response.balance_assets.sort((a, b) =>
+            a.label.localeCompare(b.label),
+          );
+          for (
+            let i = 0;
+            i < response.balance_assets.length;
+            i += maxConstainst
+          ) {
+            const batch = sortLabel.slice(
+              i,
+              Math.min(i + maxConstainst, sortLabel.length),
+            );
+            if (i === 0) {
+              await interaction.reply({
+                embeds: [
+                  createEmbedBalanceResponse(
+                    {
+                      title:
+                        monitorSubcommand.QUERY_ALL_CURRENT_BALANCES.toUpperCase(),
+                      description:
+                        "Return an array that contains the mapping the tracking wallet addresses to the list of assets",
+                      color: "Blue",
+                    },
+                    batch,
+                  ),
+                ],
+              });
+            } else {
+              await interaction.followUp({
+                embeds: [
+                  createEmbedBalanceResponse(
+                    {
+                      title:
+                        monitorSubcommand.QUERY_BALANCES_MAPPING.toUpperCase(),
+                      description:
+                        "Return an array that contains the mapping the tracking wallet addresses to the list of assets",
+                      color: "Blue",
+                    },
+                    batch,
+                  ),
+                ],
+              });
+            }
+            await new Promise((r) => setTimeout(r, 2000));
+          }
+          break;
+        }
+
+        case monitorSubcommand.ADD_BALANCE: {
+          await interaction.reply("Adding balance mapping ...");
+          const addr = interaction.options.getString("address", true);
+          const lower_bound = interaction.options.getString(
+            "lower_bound",
+            true,
+          );
+          const decimals = interaction.options.getInteger("decimals", true);
+          const label = interaction.options.getString("label", true);
+          const denom = interaction.options.getString("denom", true);
+
+          const balanceInfo =
+            denom === "orai"
+              ? { native_token: { denom } }
+              : { token: { contract_addr: denom } };
+
+          try {
+            const response = await oraiBalanceProcessorContract.addBalance({
+              addr,
+              decimals,
+              label,
+              lowerBound: lower_bound,
+              balanceInfo,
+            });
+            await interaction.followUp(
+              `Add balance successfully at ${response.transactionHash}`,
+            );
+          } catch (error) {
+            await interaction.followUp(`Add balance failed: ${error.message}`);
+          }
+
+          break;
+        }
+
+        case monitorSubcommand.UPDATE_BALANCE_MAPPING: {
+          await interaction.reply("Adding balance mapping ...");
+          const addr = interaction.options.getString("address", true);
+          const lower_bound = interaction.options.getString(
+            "lower_bound",
+            true,
+          );
+          const denom = interaction.options.getString("denom", true);
+
+          const balanceInfo =
+            denom === "orai"
+              ? { native_token: { denom } }
+              : { token: { contract_addr: denom } };
+
+          try {
+            const response = await oraiBalanceProcessorContract.updateBalance({
+              addr,
+              lowerBound: lower_bound,
+              balanceInfo,
+            });
+            await interaction.followUp(
+              `Update balance successfully at ${response.transactionHash}`,
+            );
+          } catch (error) {
+            await interaction.followUp(
+              `Update balance failed: ${error.message}`,
+            );
+          }
+
           break;
         }
         default:

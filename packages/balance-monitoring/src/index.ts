@@ -1,4 +1,5 @@
 import client from "./bot";
-import config from "../config.json";
+import * as dotenv from "dotenv";
+dotenv.config();
 
-client.login(config.token);
+client.login(process.env.TOKEN);

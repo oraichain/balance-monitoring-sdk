@@ -8,7 +8,6 @@ import {
 } from "@cosmjs/proto-signing";
 import { AssetInfo } from "@oraichain/balancing-monitoring-contracts-sdk/build/OraiBalanceProcessor.types";
 
-import config from "../config.json";
 import fs from "fs";
 import csv from "csv-parser";
 
@@ -60,7 +59,7 @@ function createAddBalanceInstruction(row: RowFromCSV): ExecuteInstruction {
       : { token: { contract_addr: mappingCW20DenomToAddress[row.denom] } };
 
   return {
-    contractAddress: config.contract_address,
+    contractAddress: process.env.CONTRACT_ADDRESS,
     msg: {
       add_balance: {
         addr: row.address,
@@ -103,18 +102,13 @@ async function addBalance() {
   const accounts = await wallet.getAccounts();
   const [signer] = accounts;
   const signClient = await SigningCosmWasmClient.connectWithSigner(
-    config.rpc,
+    process.env.RPC,
     wallet,
     {
       gasPrice: GasPrice.fromString("0.025orai"),
     },
   );
-  // console.log(
-  //   await signClient.getBalance(
-  //     "orai195269awwnt5m6c843q6w7hp8rt0k7syfu9de4h0wz384slshuzps8y7ccm",
-  //     "",
-  //   ),
-  // );
+
   const tx = await signClient.executeMultiple(
     signer.address,
     instructions,
