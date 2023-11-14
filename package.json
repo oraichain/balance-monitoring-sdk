@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "postinstall": "patch-package",
-    "build": "tsc -p",
+    "build": "lerna run build --parallel",
     "deploy": "yarn publish --access public --patch",
     "docs": "typedoc --entryPointStrategy expand --name 'Balance Monitoring SDK' --readme none --tsconfig packages/contracts-sdk/tsconfig.json packages/contracts-sdk/src"
   },
@@ -23,11 +23,17 @@
   },
   "devDependencies": {
     "@types/node": "^18.15.8",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "eslint": "^8.51.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-security": "^1.7.1",
     "lerna": "^5.6.1",
     "patch-package": "^7.0.0",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.7",
-    "typescript": "5.0"
+    "typescript": "^5.2.2"
   },
   "version": "1.0.1"
 }
