@@ -241,7 +241,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
             true,
           );
           const decimals = interaction.options.getInteger("decimals", true);
-          const label = interaction.options.getString("label", true);
+          const label = interaction.options.getString("project", true);
           const denom = interaction.options.getString("denom", true);
 
           const balanceInfo =
@@ -268,7 +268,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
         }
 
         case monitorSubcommand.UPDATE_BALANCE_MAPPING: {
-          await interaction.reply("Adding balance mapping ...");
+          await interaction.reply("Updating balance info...");
           const addr = interaction.options.getString("address", true);
           const lower_bound = interaction.options.getString(
             "lower_bound",
@@ -289,6 +289,22 @@ client.on(Events.InteractionCreate, async (interaction) => {
             });
             await interaction.followUp(
               `Update balance successfully at ${response.transactionHash}`,
+            );
+          } catch (error) {
+            await interaction.followUp(
+              `Update balance failed: ${error.message}`,
+            );
+          }
+          break;
+        }
+
+        case monitorSubcommand.DELETE_BALANCE_MAPPING: {
+          await interaction.reply("Updating balance info...");
+          const addr = interaction.options.getString("address", true);
+          try {
+            const response = await oraiBalanceProcessorContract.deleteBalanceMapping({addr});
+            await interaction.followUp(
+              `Delete balance successfully at ${response.transactionHash}`,
             );
           } catch (error) {
             await interaction.followUp(

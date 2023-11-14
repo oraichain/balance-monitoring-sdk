@@ -121,20 +121,3 @@ export const createEmbedBalanceResponse = (
   return embedBalance;
 };
 
-// const embedBalance = new EmbedBuilder()
-//   .setTitle("Balance")
-//   .setDescription("Balance of the wallet")
-//   .setTimestamp()
-//   .addFields(
-//     { name: "Regular field title", value: "Some value here" },
-//     { name: "\u200B", value: "\u200B" },
-//     { name: "Inline field title", value: "Some value here", inline: true },
-//     { name: "Inline field title", value: "Some value here", inline: true },
-//   )
-//   .addFields({
-//     name: "Inline field title",
-//     value: "Some value here",
-//     inline: true,
-//   });
-//
-// export default embedBalance;
